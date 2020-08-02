@@ -1,41 +1,39 @@
 package com.example.sms_app;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+
 public class MainActivity extends AppCompatActivity {
 
-    private EditText txtMobile;
-    private EditText txtMessage;
-    private Button btnSms;
-
+    private Button button;
+    //url = 'karanmodh.pythonanywhere.com/api'
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        txtMobile = findViewById(R.id.mobileNo);
-        txtMessage = findViewById(R.id.message);
-        btnSms = findViewById(R.id.btnSend);
-        btnSms.setOnClickListener(view -> sendMessageFunc(txtMobile, txtMessage));
+        button = (Button) findViewById(R.id.btnSend);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openSMSscreen();
+            }
+        });
+    }
+    public void openSMSscreen(){
+        Intent intent = new Intent(this,Send_SMS.class);
+        startActivity(intent);
     }
 
-    private void sendMessageFunc(EditText txtMobile, EditText txtMessage) {
-        try{
-            SmsManager sms_mgr = SmsManager.getDefault();
-            sms_mgr.sendTextMessage(txtMobile.getText().toString(), null,  txtMessage.getText().toString(), null, null);
-            Toast.makeText(MainActivity.this, "SMS sent successfully.", Toast.LENGTH_SHORT).show();
-            txtMessage.getText().clear();
-            txtMobile.getText().clear();
-        }
-        catch (Exception e){
-            Toast.makeText(MainActivity.this, "SMS failed to sent. Please try again.",Toast.LENGTH_SHORT).show();
-        }
-    }
+
 }
 
 
