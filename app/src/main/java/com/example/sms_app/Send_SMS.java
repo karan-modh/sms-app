@@ -46,7 +46,7 @@ public class Send_SMS extends AppCompatActivity {
     }
 
     private void getjson(){
-        String url = "karanmodh.pythonanywhere.com/api";
+        String url = "https://karanmodh.pythonanywhere.com/api";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override

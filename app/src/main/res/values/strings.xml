@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">sms-app</string>
+    <string name="loginUrl">https://sms-app-cs321.herokuapp.com/api/account/login</string>
+
 </resources>
