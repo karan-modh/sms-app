@@ -13,27 +13,32 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.example.sms_app.MainActivity;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Send_SMS extends AppCompatActivity {
 
 
     private EditText txtMessage;
     private RequestQueue mQueue;
+    private String auth_token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_send__s_m_s);
+        Bundle bundle = getIntent().getExtras();
+        auth_token = bundle.getString("token");
+        setContentView(R.layout.activity_send_sms);
 
         Button btnSms = findViewById(R.id.send_sms);
-
         mQueue = Volley.newRequestQueue(this);
 
         btnSms.setOnClickListener(new View.OnClickListener() {
@@ -46,8 +51,7 @@ public class Send_SMS extends AppCompatActivity {
     }
 
     private void getjson(){
-        String url = "https://karanmodh.pythonanywhere.com/api";
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getString(R.string.fetch_data_url), null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -68,7 +72,15 @@ public class Send_SMS extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
             }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders(){
+                Map<String, String> params = new HashMap<String, String>();
+                String token = "Token " + auth_token;
+                params.put("Authorization", token);
+                return params;
+            }
+        };
         mQueue.add(request);
     }
 
@@ -80,7 +92,7 @@ public class Send_SMS extends AppCompatActivity {
 
         }
         catch (Exception e){
-            Toast.makeText(Send_SMS.this, "SMS failed to sent. Please try again.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(Send_SMS.this, "SMS failed to sent. Please generate the message again.",Toast.LENGTH_SHORT).show();
         }
     }
 
